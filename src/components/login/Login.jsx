@@ -56,6 +56,7 @@ export default function Login({onUserLogged}) {
                     <Form.Label>Username</Form.Label>
                     <Form.Control
                         autoFocus
+                        autoComplete="off"
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
@@ -70,7 +71,7 @@ export default function Login({onUserLogged}) {
                     />
                 </Form.Group>
                 {errorMessage}
-                <Button block size="lg" type="submit" disabled={!validateForm()}>
+                <Button size="lg" type="submit" disabled={!validateForm()}>
                     Login
                 </Button>
             </Form>
