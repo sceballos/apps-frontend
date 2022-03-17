@@ -5,6 +5,7 @@ import { Card } from 'react-bootstrap';
 function AppList({loggedUser}) {
     const history = useHistory();
     const [apps, setApps] = useState([]);
+
     useEffect(() => {
         const getApps = async () => {
             const data = await fetch('http://localhost:5880/apps');
@@ -38,4 +39,3 @@ function AppList({loggedUser}) {
     );
 }
 export default AppList;
-

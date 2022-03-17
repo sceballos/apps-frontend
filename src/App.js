@@ -9,7 +9,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import MainNavBar from './components/NavBar';
 import AppList from './components/home/AppList';
 import AppEdit from './components/app/edit/AppEdit'
-import Login from './components/login/Login';
+import AppCreate from './components/app/create/AppCreate'
+import Logout from './components/user/logout/Logout';
+import UserPortal from './components/user/UserPortal';
 
 function App() {
   const [loggedUser, setLoggedUser] = useState();
@@ -18,6 +20,11 @@ function App() {
     setLoggedUser(userdata);
   }, []);
 
+  const logoutCallback = useCallback((userdata) => {
+    setLoggedUser();
+  }, []);
+
+
   return (
     <div className="App">
       <Router>
@@ -25,10 +32,11 @@ function App() {
           <MainNavBar loggedUser={loggedUser}></MainNavBar>
           <Switch>
             <Route exact path="/"> <AppList loggedUser={loggedUser}/> </Route>
-            <Route exact path="/login"> <Login onUserLogged={loginCallback}/> </Route>            
-            <Route exact path="/create" component={null} />
-            <Route exact path="/edit"> <AppEdit/></Route>
-            <Route exact path="/" component={null} />            
+            <Route exact path="/login"> <UserPortal onUserLogged={loginCallback} onUserCreated={loginCallback}/> </Route>
+            {/* <Route exact path="/signup"> <SignUp onUserCreated={loginCallback}/> </Route> */}
+            <Route exact path="/logout"> <Logout loggedUser={loggedUser} onUserLoggedOut={logoutCallback}/> </Route>
+            <Route exact path="/create"> <AppCreate loggedUser={loggedUser}/> </Route>
+            <Route exact path="/edit"> <AppEdit/> </Route>
           </Switch>
         </div>
       </Router>

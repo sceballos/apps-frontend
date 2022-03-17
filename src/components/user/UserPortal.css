@@ -1,0 +1,24 @@
+@media all and (min-width: 480px) {
+    .Portal {
+      margin-top: 5%;
+    }
+
+    .TabButton {
+      width: 15%;
+    }
+    
+    .SubmitButton {
+      margin-top: 2%;
+      width: 100%;
+    }
+
+    .Portal form {
+      margin: 0 auto;
+      max-width: 31%;
+    }
+
+    .InputField {
+      margin-top: 2%;
+    }
+}
+  
