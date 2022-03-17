@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
 import { Navbar, Container, Nav } from 'react-bootstrap';
 import {
     Link
 } from "react-router-dom";
-function MainNavBar({ loggedUser }) {
+function MainNavBar({ loggedUser }) {    
     return (
         <Navbar variant="dark" bg="dark">
             <Container>
@@ -17,7 +16,6 @@ function MainNavBar({ loggedUser }) {
                             <Nav.Link as={Link} to="/login">Login</Nav.Link>}
                     </Nav>
                     {loggedUser ? <Navbar.Brand>Hello {loggedUser.username}</Navbar.Brand> : <></>}
-
                 </Navbar.Collapse>
             </Container>
         </Navbar>

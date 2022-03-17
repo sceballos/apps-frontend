@@ -24,7 +24,6 @@ function App() {
     setLoggedUser();
   }, []);
 
-
   return (
     <div className="App">
       <Router>
@@ -33,7 +32,6 @@ function App() {
           <Switch>
             <Route exact path="/"> <AppList loggedUser={loggedUser}/> </Route>
             <Route exact path="/login"> <UserPortal onUserLogged={loginCallback} onUserCreated={loginCallback}/> </Route>
-            {/* <Route exact path="/signup"> <SignUp onUserCreated={loginCallback}/> </Route> */}
             <Route exact path="/logout"> <Logout loggedUser={loggedUser} onUserLoggedOut={logoutCallback}/> </Route>
             <Route exact path="/create"> <AppCreate loggedUser={loggedUser}/> </Route>
             <Route exact path="/edit"> <AppEdit/> </Route>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
-import { Card } from 'react-bootstrap';
 
 function Logout({ loggedUser, onUserLoggedOut }) {
     const history = useHistory();
