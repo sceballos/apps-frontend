@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import {Button, Form, Spinner} from "react-bootstrap";
+import { Button, Form, Spinner } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import "./UserPortal.css";
+import baseRequest from "../../../repository/api/API";
 
 export default function UserPortal({ onUserLogged, onUserCreated }) {
     const history = useHistory();
@@ -12,42 +13,20 @@ export default function UserPortal({ onUserLogged, onUserCreated }) {
     const [signUpMode, setSignUpMode] = useState(false);
 
     const attemptLogin = async () => {
-        try {
-            const url = 'http://127.0.0.1:5880/user/login';
-            const rawResponse = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username: username, password: password })
-            });
-            const content = await rawResponse.json();
-            setLoading(false)
-            return content
-        }
-        catch (err) {
-            setLoading(false)
-        }
+        const apiResponse = await baseRequest(
+            "/user/login",
+            "POST",
+            { username: username, password: password });
+        setLoading(false);
+        return apiResponse;
     }
     const attemptUserCreation = async () => {
-        try {
-            const url = 'http://127.0.0.1:5880/user/create';
-            const rawResponse = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username: username, password: password })
-            });
-            const content = await rawResponse.json();
-            setLoading(false)
-            return content
-        }
-        catch (err) {
-            setLoading(false)
-        }
+        const apiResponse = await baseRequest(
+            "/user/create",
+            "POST",
+            { username: username, password: password });
+            setLoading(false);
+            return apiResponse;
     }
 
     function validateForm() {
@@ -58,36 +37,25 @@ export default function UserPortal({ onUserLogged, onUserCreated }) {
         event.preventDefault();
         setErrorMessage("");
         setLoading(true);
-
-        if (signUpMode) {
-            attemptUserCreation().then(response => {
-                if (response.message != undefined) {
-                    setErrorMessage(response.message)
-                } else {
-                    onUserCreated(response);
-                    history.push("/");
-                }
-            });
-        } else {
-            setLoading(true);
-            attemptLogin().then(response => {
-                if (response.message != undefined) {
-                    setErrorMessage(response.message)
-                } else {
-                    onUserLogged(response);
-                    history.push("/");
-                }
-            });
-        }
+        (signUpMode ? attemptUserCreation() : attemptLogin())
+        .then(response => {
+            setLoading(false);
+            if (response.message != undefined) {
+                setErrorMessage(response.message)
+            } else {
+                (signUpMode ? onUserCreated(response) : onUserLogged(response));                
+                history.push("/");
+            }
+        });
     }
 
     return (
-        <div className="Portal">            
+        <div className="Portal">
             <div className="mb-2">
-                <Button onClick={() => {setSignUpMode(false); setErrorMessage("")}} variant={signUpMode ? "secondary" : "primary"} size="lg" className="TabButton">
+                <Button onClick={() => { setSignUpMode(false); setErrorMessage("") }} variant={signUpMode ? "secondary" : "primary"} size="lg" className="TabButton">
                     Login with credentials
                 </Button>{' or '}
-                <Button onClick={() => {setSignUpMode(true); setErrorMessage("")}} variant={signUpMode ? "primary" : "secondary"} size="lg" className="TabButton">
+                <Button onClick={() => { setSignUpMode(true); setErrorMessage("") }} variant={signUpMode ? "primary" : "secondary"} size="lg" className="TabButton">
                     Register new user
                 </Button>
             </div>
@@ -117,10 +85,10 @@ export default function UserPortal({ onUserLogged, onUserCreated }) {
                     {signUpMode ? "Sign up" : "Login"}
                 </Button>
                 {loading ?
-                <div>
-                    <Spinner animation="grow" />
-                </div>
-                : <></>}
+                    <div>
+                        <Spinner animation="grow" />
+                    </div>
+                    : <></>}
             </Form>
         </div>
     );

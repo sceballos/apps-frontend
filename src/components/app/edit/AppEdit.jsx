@@ -4,6 +4,7 @@ import Form from "@rjsf/core";
 import { Spinner } from "react-bootstrap";
 import './../AppManagement.css';
 import Schemas from './../FormSchema'
+import baseRequest from '../../../repository/api/API';
 
 function AppEdit() {
     const [loading, setLoading] = useState(false);
@@ -15,25 +16,12 @@ function AppEdit() {
     const [errorMessage, setErrorMessage] = useState("");
 
     const updateAppRequest = async (name, description, token) => {
-        try {
-            const url = `http://127.0.0.1:5880/apps/update/${appToEdit.app_id}`;
-            const rawResponse = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': token
-                },
-                body: JSON.stringify({ name: name, description: description })
-            });
-            const content = await rawResponse.json();
-            setLoading(false);
-            return content
-        }
-        catch (err) {
-            console.log(err);
-            setLoading(false);
-        }
+        const apiResponse = await baseRequest(
+            `/apps/update/${appToEdit.app_id}`,
+            "POST",
+            { name: name, description: description },
+            token);
+        return apiResponse;
     }
 
     const schema = JSON.parse(JSON.stringify(Schemas.FormSchema));
@@ -53,9 +41,7 @@ function AppEdit() {
             <Form
                 schema={schema}
                 uiSchema={Schemas.UISchema}
-                onChange={console.log("changed")}
-                onSubmit={onSubmit}
-                onError={console.log("errors")} />
+                onSubmit={onSubmit}/>
             <div>{errorMessage}</div>
             {loading ?
                 <div>
