@@ -85,10 +85,10 @@ export default function UserPortal({ onUserLogged, onUserCreated }) {
         <div className="Portal">
             <div className="mb-2">
                 <Button onClick={() => {setSignUpMode(false); setErrorMessage("")}} variant={signUpMode ? "secondary" : "primary"} size="lg" className="TabButton">
-                    Login
+                    Login with credentials
                 </Button>{' or '}
                 <Button onClick={() => {setSignUpMode(true); setErrorMessage("")}} variant={signUpMode ? "primary" : "secondary"} size="lg" className="TabButton">
-                    Register
+                    Register new user
                 </Button>
             </div>
             <Form onSubmit={handleSubmit}>
