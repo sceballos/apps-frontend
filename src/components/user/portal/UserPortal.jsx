@@ -113,7 +113,7 @@ export default function UserPortal({ onUserLogged, onUserCreated }) {
                     />
                 </Form.Group>
                 {errorMessage}
-                <Button className="SubmitButton" size="lg" type="submit" disabled={!validateForm()}>
+                <Button data-testid="portal-submit" className="SubmitButton" size="lg" type="submit" disabled={!validateForm()}>
                     {signUpMode ? "Sign up" : "Login"}
                 </Button>
             </Form>

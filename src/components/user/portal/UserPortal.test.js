@@ -9,13 +9,13 @@ const testUser = {
     token: "rv5aJOVOLr72YzZEXAs8"
 };
 
-test('Default state after first render of login button should be disabled', async () => {
+test('Default state after first render of login button should be disabled', () => {
     render(<UserPortal />);
     const loginButton = screen.queryByText('Login');
     expect(loginButton).toBeDisabled();
 });
 
-test('State after typing username and password of "login" button should be enabled', async () => {
+test('State after typing username and password of "login" button should be enabled', () => {
     render(<UserPortal />);
     userEvent.type(screen.queryByPlaceholderText('Username'),testUser.username);
     userEvent.type(screen.queryByPlaceholderText('Password'), testUser.password);
@@ -23,14 +23,14 @@ test('State after typing username and password of "login" button should be enabl
     expect(loginButton).toBeEnabled();
 });
 
-test('Pressing "Register new user" button should change the label of Login button to Sign Up', async () => {
+test('Pressing "Register new user" button should change the label of Login button to Sign Up', () => {
     render(<UserPortal />);
     userEvent.click(screen.queryByText('Register new user'));
     const signUpButton = screen.queryByText('Sign up');    
     expect(signUpButton).not.toBeNull();
 });
 
-test('State after typing username and password of "sign up" button should be enabled', async () => {
+test('State after typing username and password of "sign up" button should be enabled', () => {
     render(<UserPortal />);
     userEvent.click(screen.queryByText('Register new user'));
     userEvent.type(screen.queryByPlaceholderText('Username'), testUser.username);

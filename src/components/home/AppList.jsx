@@ -11,13 +11,20 @@ function AppList({ loggedUser }) {
     const [appsToDelete, setAppsToDelete] = useState([]);
 
     useEffect(() => {
+        let isCancelled = false;
         const getApps = async () => {
             const data = await fetch('http://localhost:5880/apps');
             const json = await data.json();
-            setApps(json);
-            setUpdate(false);
+
+            if (!isCancelled) {
+                setApps(json);
+                setUpdate(false);    
+            }
         }
         getApps();
+        return () => {
+            isCancelled = true;
+        };
     }, [update])
 
     const attemptAppDeletion = async (appList, token) => {
@@ -28,7 +35,7 @@ function AppList({ loggedUser }) {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Authorization' : token
+                    'Authorization': token
                 },
                 body: JSON.stringify(appList)
             });
@@ -64,7 +71,7 @@ function AppList({ loggedUser }) {
 
     const handleDeleteAction = (appsList, token) => {
         console.log(token);
-        attemptAppDeletion(appsList, token).then( result => {
+        attemptAppDeletion(appsList, token).then(result => {
             console.log(result.length);
             console.log("current ", appsToDelete.length);
             if (result.message == undefined) {
@@ -78,7 +85,7 @@ function AppList({ loggedUser }) {
     }
 
     const toggleDeleteMode = () => {
-        if (deleteMode) { 
+        if (deleteMode) {
             setDeleteMessage("");
             setAppsToDelete([])
         } else {
