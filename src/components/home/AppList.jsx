@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
 import { Card, CardGroup, Badge, Button, Form, Spinner } from 'react-bootstrap';
 import convertDate from './../../util.js';
+import baseRequest from './../../repository/api/API.js'
 
 function AppList({ loggedUser }) {
     const history = useHistory();
@@ -11,15 +12,13 @@ function AppList({ loggedUser }) {
     const [deleteMessage, setDeleteMessage] = useState();
     const [appsToDelete, setAppsToDelete] = useState([]);
 
-    const maxTextLength = 130;
+    const maxTextLength = 100;
     useEffect(() => {
         let isCancelled = false;
         const getApps = async () => {
-            const data = await fetch('http://localhost:5880/apps');
-            const json = await data.json();
-
+            const apiResponse = await baseRequest("/apps")
             if (!isCancelled) {
-                setApps(json);
+                setApps(apiResponse);
                 setLoading(false);
             }
         }
@@ -30,47 +29,31 @@ function AppList({ loggedUser }) {
     }, [loading])
 
     const attemptAppDeletion = async (appList, token) => {
-        try {
-            const url = 'http://127.0.0.1:5880/apps/delete';
-            const rawResponse = await fetch(url, {
-                method: 'DELETE',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': token
-                },
-                body: JSON.stringify(appList)
-            });
-            const content = await rawResponse.json();
-            setLoading(false)
-            return content
-        }
-        catch (err) {
-            setLoading(false)
-        }
+        const apiResponse = await
+            baseRequest(
+                "/apps/delete",
+                "DELETE",
+                appList,
+                token);
+        setLoading(false);
+        return apiResponse;
     }
 
     const handleClick = (event, app, user) => {
         event.preventDefault();
-        let selection = window.getSelection().toString();
-        if (selection.length > 0) {
+        if (!deleteMode) {
+            editApp(app, user);
             return;
         }
-        if (deleteMode) {
-            if (appsToDelete.includes(app.app_id)) {
-                setAppsToDelete(appsToDelete.filter((e) => (e !== app.app_id)));
-            } else {
-                setAppsToDelete(appsToDelete => [...appsToDelete, app.app_id]);
-            }
-        } else {
-            editApp(app, user);
-        }
+        const wasAppSelected = appsToDelete.includes(app.app_id);
+        wasAppSelected ? 
+            setAppsToDelete(appsToDelete.filter((e) => (e !== app.app_id)))
+            :
+            setAppsToDelete(appsToDelete => [...appsToDelete, app.app_id]);
     }
 
     const editApp = (app, user) => {
-        if (user === undefined) {
-            return;
-        } else {
+        if (user !== undefined) {
             history.push({ pathname: "/edit", state: { app: app, user: user } })
         }
     }
@@ -81,7 +64,7 @@ function AppList({ loggedUser }) {
             if (result.message === undefined) {
                 setAppsToDelete([]);
                 setDeleteMessage("Apps successfully deleted!");
-                setLoading(true);         
+                setLoading(true);
             } else {
                 setDeleteMessage(result.message);
             }
@@ -99,8 +82,7 @@ function AppList({ loggedUser }) {
     }
 
     return (
-        <div style={{ alignContent: 'center' }}>
-
+        <div>
             {loading ?
                 <div>
                     <Spinner animation="grow" />

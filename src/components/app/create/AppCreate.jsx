@@ -28,13 +28,11 @@ function AppCreate({ loggedUser }) {
         }
         catch (err) {
             setLoading(false);
-            console.log(err);
         }
     }
 
     const schema = JSON.parse(JSON.stringify(Schemas.FormSchema));
     schema.title = "Create a new application";
-    console.log(schema);
 
     const onSubmit = ({ formData }, e) => {
         setErrorMessage("");
