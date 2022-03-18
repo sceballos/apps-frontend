@@ -96,7 +96,7 @@ function AppList({ loggedUser }) {
             </Button> : <></>}
             {deleteMode ? <Form.Label>{deleteMessage}</Form.Label> : <></>}
 
-            {deleteMode ? <Button onClick={() => handleDeleteAction(appsToDelete, loggedUser.token)}
+            {(deleteMode && appsToDelete.length > 0) ? <Button onClick={() => handleDeleteAction(appsToDelete, loggedUser.token)}
                 variant='danger'
                 style={{ margin: "1%", }}>
                 Delete Selected Apps
