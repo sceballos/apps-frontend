@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
+import {Button, Form, Spinner} from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import "./UserPortal.css";
 
@@ -70,6 +69,7 @@ export default function UserPortal({ onUserLogged, onUserCreated }) {
                 }
             });
         } else {
+            setLoading(true);
             attemptLogin().then(response => {
                 if (response.message != undefined) {
                     setErrorMessage(response.message)
@@ -82,7 +82,7 @@ export default function UserPortal({ onUserLogged, onUserCreated }) {
     }
 
     return (
-        <div className="Portal">
+        <div className="Portal">            
             <div className="mb-2">
                 <Button onClick={() => {setSignUpMode(false); setErrorMessage("")}} variant={signUpMode ? "secondary" : "primary"} size="lg" className="TabButton">
                     Login with credentials
@@ -116,6 +116,11 @@ export default function UserPortal({ onUserLogged, onUserCreated }) {
                 <Button data-testid="portal-submit" className="SubmitButton" size="lg" type="submit" disabled={!validateForm()}>
                     {signUpMode ? "Sign up" : "Login"}
                 </Button>
+                {loading ?
+                <div>
+                    <Spinner animation="grow" />
+                </div>
+                : <></>}
             </Form>
         </div>
     );

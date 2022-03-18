@@ -16,7 +16,7 @@ function Logout({ loggedUser, onUserLoggedOut }) {
     }, [])
 
     return (
-        <div class="alert alert-info" role="alert">
+        <div className="alert alert-info" role="alert">
             Goodbye! You are being logged out.
         </div>
     );

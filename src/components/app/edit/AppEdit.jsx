@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useHistory, useLocation } from "react-router-dom";
 import Form from "@rjsf/core";
+import { Spinner } from "react-bootstrap";
+import './../AppManagement.css';
+import Schemas from './../FormSchema'
 
 function AppEdit() {
+    const [loading, setLoading] = useState(false);
     const location = useLocation();
     const history = useHistory();
     const appToEdit = location.state.app;
@@ -18,44 +22,46 @@ function AppEdit() {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Authorization' : token
+                    'Authorization': token
                 },
                 body: JSON.stringify({ name: name, description: description })
             });
             const content = await rawResponse.json();
+            setLoading(false);
             return content
         }
         catch (err) {
             console.log(err);
-
+            setLoading(false);
         }
     }
 
-    const schema = {
-        title: `Edit ${appToEdit.name}`,
-        type: "object",
-        required: ["name", "description"],
-        properties: {
-            name: { type: "string", title: "Name", default: appToEdit.name },
-            description: { type: "string", title: "Description", default: appToEdit.description }
-        }
-    };
-
+    const schema = JSON.parse(JSON.stringify(Schemas.FormSchema));
+    schema.title = `Edit ${appToEdit.name}`;
+    schema.properties.name.default = appToEdit.name;
+    schema.properties.description.default = appToEdit.description;
+    
     const onSubmit = ({ formData }, e) => {
+        setLoading(true);
         updateAppRequest(formData.name, formData.description, loggedUser.token).then(result => {
-            if (result.message != undefined) { setErrorMessage(result.message); } else { history.push("/"); }
+            if (result.message !== undefined) { setErrorMessage(result.message); } else { history.push("/"); }
         });
     }
 
     return (
-        <div>
+        <div className="AppManagement">
             <Form
                 schema={schema}
+                uiSchema={Schemas.UISchema}
                 onChange={console.log("changed")}
                 onSubmit={onSubmit}
                 onError={console.log("errors")} />
             <div>{errorMessage}</div>
-
+            {loading ?
+                <div>
+                    <Spinner animation="grow" />
+                </div>
+                : <></>}
         </div>
 
 

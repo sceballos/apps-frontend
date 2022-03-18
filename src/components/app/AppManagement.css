@@ -1,0 +1,24 @@
+@media all and (min-width: 480px) {
+    .AppManagement {
+      margin-top: 2%;
+    }
+
+    .TabButton {
+      width: 15%;
+    }
+    
+    .SubmitButton {
+      margin-top: 2%;
+      width: 100%;
+    }
+
+    .AppManagement form {
+      margin: 0 auto;
+      max-width: 30%;
+    }
+
+    .InputField {
+      margin-top: 2%;
+    }
+}
+  
