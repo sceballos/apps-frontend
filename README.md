@@ -10,7 +10,7 @@
 - ReactJS
 
 ## How to run this project
-1 - Clone this repository :  `git clone hhttps://github.com/sceballos/apps-frontend.git` and `cd apps-frontend`.
+1 - Clone this repository :  `git clone https://github.com/sceballos/apps-frontend.git` and `cd apps-frontend`.
 
 2 - Open `/src/repository/api/API.js` and edit the server info :
 
@@ -43,4 +43,4 @@ See the section about [running tests](https://facebook.github.io/create-react-ap
 
 ## Running UI test cases
 
-Just run `npm test` after your backend is running and properly configured.
+After your backend is running and properly configured you can just run `npm test` and press `A` when prompted while in the interactive terminal.
