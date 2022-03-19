@@ -43,4 +43,5 @@ See the section about [running tests](https://facebook.github.io/create-react-ap
 
 ## Running UI test cases
 
-After your backend is running and properly configured you can just run `npm test` and press `A` when prompted while in the interactive terminal.
+- Make sure you run `npm start` and your development server is running before running test cases.
+- After your backend is running and properly configured you can just run `npm test` and press `A` when prompted while in the interactive terminal.

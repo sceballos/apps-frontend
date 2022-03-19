@@ -17,9 +17,9 @@ const Schemas = {
             'ui:title': 'Name',
         },
         description: {
-            'ui:options': { inputType: 'text' },
+            'ui:options': { inputType: 'text', rows: 5 },
             'ui:placeholder': 'Description of the app',
-            'ui:widget': 'textarea', 'ui:options': { rows: 5 }
+            'ui:widget': 'textarea'
         },
     },
     

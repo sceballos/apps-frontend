@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory } from "react-router-dom";
-import {CardGroup, Button, Form, Spinner } from 'react-bootstrap';
+import {CardGroup, Button, Form } from 'react-bootstrap';
 import AppCard from './AppCard.jsx';
 import baseRequest from './../../repository/api/API.js'
 import LoadingWidget from '../uielem/LoadingWidget.jsx';
@@ -48,8 +48,16 @@ function AppList({ loggedUser }) {
         return apiResponse;
     }
 
+
+
     const clickCallback = useCallback((event, app, user) => {
         event.preventDefault();
+        
+        const editApp = (app, user) => {
+            if (user) {
+                history.push({ pathname: "/edit", state: { app: app, user: user } })
+            }
+        }
 
         if (!deleteMode) {
             editApp(app, user);
@@ -61,13 +69,7 @@ function AppList({ loggedUser }) {
             setAppsToDelete(appsToDelete.filter((e) => (e !== app.app_id)))
             :
             setAppsToDelete(appsToDelete => [...appsToDelete, app.app_id]);
-    }, [deleteMode, appsToDelete]);
-
-    const editApp = (app, user) => {
-        if (user) {
-            history.push({ pathname: "/edit", state: { app: app, user: user } })
-        }
-    }
+    }, [deleteMode, appsToDelete, history]);
 
     const handleDeleteAction = (appsList, token) => {
         setDeleteMessage("Deleting...");
