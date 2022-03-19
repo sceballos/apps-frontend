@@ -6,7 +6,6 @@ const serverInfo = {
 const baseUrl = `http://${serverInfo.host}:${serverInfo.port}`;
 
 export default async function baseRequest(path, method, params, token) {
-
     try {
         const data = await fetch(`${baseUrl}${path}`,
             {

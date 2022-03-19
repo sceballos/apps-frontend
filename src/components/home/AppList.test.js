@@ -10,10 +10,12 @@ const testUser = {
     token: "rv5aJOVOLr72YzZEXAs8"
 };
 
+const apiResponseWaitTime = 1500;
+
 test('"Enable Delete Mode" button should be NULL if user is NOT logged', async () => {
     await act(async () => {
         render(<AppList />);
-        await new Promise((r) => setTimeout(r, 3000));
+        await new Promise((r) => setTimeout(r, apiResponseWaitTime));
     });
 
     let deleteModeButton = null;
@@ -29,7 +31,7 @@ test('"Enable Delete Mode" button should be NULL if user is NOT logged', async (
 test('"Enable Delete Mode" button should be NOT NULL and ENABLED if user is logged', async () => {
     await act(async () => {
         render(<AppList loggedUser={testUser}/>);
-        await new Promise((r) => setTimeout(r, 3000));
+        await new Promise((r) => setTimeout(r, apiResponseWaitTime));
     });
 
     let deleteModeButton = null;
@@ -45,7 +47,7 @@ test('"Enable Delete Mode" button should be NOT NULL and ENABLED if user is logg
 test('Clicking "Enable Delete Mode" button should toggle to "Deletion Mode" if user is logged', async () => {
     await act(async () => {
         render(<AppList loggedUser={testUser}/>);
-        await new Promise((r) => setTimeout(r, 3000));
+        await new Promise((r) => setTimeout(r, apiResponseWaitTime));
     });
 
     const deleteModeButton = await screen.findByText('Enable Delete Mode');
@@ -57,7 +59,7 @@ test('Clicking "Enable Delete Mode" button should toggle to "Deletion Mode" if u
 test('Clicking "Enable Delete Mode" button should display a help message if user is logged', async () => {
     await act(async () => {
         render(<AppList loggedUser={testUser}/>);
-        await new Promise((r) => setTimeout(r, 3000));
+        await new Promise((r) => setTimeout(r, apiResponseWaitTime));
     });
 
     const deleteModeButton = await screen.findByText('Enable Delete Mode');
@@ -69,7 +71,7 @@ test('Clicking "Enable Delete Mode" button should display a help message if user
 test('Clicking "Enable Delete Mode" button should NOT render "Delete Selected Apps" button when no app is selected', async () => {
     await act(async () => {
         render(<AppList loggedUser={testUser}/>);
-        await new Promise((r) => setTimeout(r, 3000));
+        await new Promise((r) => setTimeout(r, apiResponseWaitTime));
     });
 
     const deleteModeButton = await screen.findByText('Enable Delete Mode');
