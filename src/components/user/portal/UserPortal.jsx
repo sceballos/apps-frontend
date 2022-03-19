@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Button, Form, Spinner } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
+import LoadingWidget from "../../uielem/LoadingWidget";
 import { useHistory } from "react-router-dom";
 import "./UserPortal.css";
 import baseRequest from "../../../repository/api/API";
 
-export default function UserPortal({ onUserLogged, onUserCreated }) {
+function UserPortal({ onUserLogged, onUserCreated }) {
     const history = useHistory();
     const [loading, setLoading] = useState(false);
     const [username, setUsername] = useState("");
@@ -88,12 +89,10 @@ export default function UserPortal({ onUserLogged, onUserCreated }) {
                 <Button data-testid="portal-submit" className="SubmitButton" size="lg" type="submit" disabled={!validateForm()}>
                     {signUpMode ? "Sign up" : "Login"}
                 </Button>
-                {loading ?
-                    <div>
-                        <Spinner animation="grow" />
-                    </div>
-                    : <></>}
+                <LoadingWidget isLoading={loading}/>
             </Form>
         </div>
     );
 }
+
+export default UserPortal;

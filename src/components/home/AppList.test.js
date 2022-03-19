@@ -39,7 +39,6 @@ test('"Enable Delete Mode" button should be NOT NULL and ENABLED if user is logg
     } catch (error) {
         console.log(error);
     }
-
     expect(deleteModeButton).toBeEnabled();
 });
 

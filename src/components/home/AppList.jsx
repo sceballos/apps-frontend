@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory } from "react-router-dom";
-import { Card, CardGroup, Badge, Button, Form, Spinner } from 'react-bootstrap';
-import convertDate from './../../util.js';
+import {CardGroup, Button, Form, Spinner } from 'react-bootstrap';
+import AppCard from './AppCard.jsx';
 import baseRequest from './../../repository/api/API.js'
+import LoadingWidget from '../uielem/LoadingWidget.jsx';
 
 function AppList({ loggedUser }) {
     const history = useHistory();
@@ -13,19 +14,16 @@ function AppList({ loggedUser }) {
     const [deleteMessage, setDeleteMessage] = useState();
     const [appsToDelete, setAppsToDelete] = useState([]);
 
-    const maxTextLength = 100;
     useEffect(() => {
         let isCancelled = false;
         const getApps = async () => {
             const apiResponse = await baseRequest("/apps");
-
-            setLoading(false);
-
-            if (apiResponse.error) {
-                setErrorMessage(apiResponse.error);
-                return;
-            }
             if (!isCancelled) {
+                setLoading(false);
+                if (apiResponse.error) {
+                    setErrorMessage(apiResponse.error);
+                    return;
+                }
                 if (!apiResponse.length) {
                     setErrorMessage("No available apps");
                     return;
@@ -50,21 +48,23 @@ function AppList({ loggedUser }) {
         return apiResponse;
     }
 
-    const handleClick = (event, app, user) => {
+    const clickCallback = useCallback((event, app, user) => {
         event.preventDefault();
+
         if (!deleteMode) {
             editApp(app, user);
             return;
         }
         const wasAppSelected = appsToDelete.includes(app.app_id);
+
         wasAppSelected ?
             setAppsToDelete(appsToDelete.filter((e) => (e !== app.app_id)))
             :
             setAppsToDelete(appsToDelete => [...appsToDelete, app.app_id]);
-    }
+    }, [deleteMode, appsToDelete]);
 
     const editApp = (app, user) => {
-        if (user !== undefined) {
+        if (user) {
             history.push({ pathname: "/edit", state: { app: app, user: user } })
         }
     }
@@ -80,7 +80,6 @@ function AppList({ loggedUser }) {
                 setDeleteMessage(result.message);
                 return;
             }
-
             setAppsToDelete([]);
             setDeleteMessage("Apps successfully deleted!");
             setLoading(true);
@@ -98,11 +97,7 @@ function AppList({ loggedUser }) {
     }
     return (
         <div>
-            {loading ?
-                <div>
-                    <Spinner animation="grow" />
-                </div>
-                : <></>}
+            <LoadingWidget isLoading={loading}/>
             {errorMessage ? errorMessage : ""}
             {loggedUser && !loading ? <Button onClick={() => toggleDeleteMode()}
                 variant={deleteMode ? 'primary' : 'danger'}
@@ -118,33 +113,15 @@ function AppList({ loggedUser }) {
             </Button> : <></>}
             <CardGroup>
                 {apps.map((app) =>
-                    <div key={app.app_id} className="row-lg-1 d-flex align-items-stretch">
-                        <Card
-                            style={{ margin: '5px', display: 'inline-block', width: '250px', height: '250px', maxHeight: '250px' }}
-                            onClick={(e) => handleClick(e, app, loggedUser)}>
-                            <div style={{ margin: 5 }}>
-                                {appsToDelete.includes(app.app_id) ? <Badge bg="danger">Selected</Badge>
-                                    : <Badge bg="info">{`Modified on ${convertDate(app.modified_on)}`}</Badge>}
-                            </div>
-                            <Card.Img
-                                style={{ height: '10%', width: '10%' }}
-                                variant="top"
-                                src="https://play-lh.googleusercontent.com/UrY7BAZ-XfXGpfkeWg0zCCeo-7ras4DCoRalC_WXXWTK9q5b0Iw7B0YQMsVxZaNB7DM=s180" />
-
-                            <Card.Body>
-                                <Card.Title>
-                                    {app.name}
-                                </Card.Title>
-                                <Card.Text>
-                                    {app.description.substring(0, maxTextLength)} {app.description.length >= maxTextLength && '...'}
-                                </Card.Text>
-                            </Card.Body>
-                        </Card>
-                    </div>
+                    <AppCard
+                        key={app.app_id}
+                        app={app}
+                        handleClick={clickCallback}
+                        loggedUser={loggedUser}
+                        isSelected={appsToDelete.includes(app.app_id)} />                    
                 )}
             </CardGroup>
         </div>
-
     );
 }
 export default AppList;

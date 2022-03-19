@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
 import Form from "@rjsf/core";
 import './../AppManagement.css';
-import { Spinner } from "react-bootstrap";
 import Schemas from './../FormSchema'
 import baseRequest from '../../../repository/api/API';
+import LoadingWidget from '../../uielem/LoadingWidget';
 
 function AppCreate({ loggedUser }) {
     const [loading, setLoading] = useState(false);
@@ -54,11 +54,7 @@ function AppCreate({ loggedUser }) {
                 uiSchema={Schemas.UISchema}
                 onSubmit={onSubmit} />
             <div>{errorMessage}</div>
-            {loading ?
-                <div>
-                    <Spinner animation="grow" />
-                </div>
-                : <></>}
+            <LoadingWidget isLoading={loading}/>
         </div>
     );
 }

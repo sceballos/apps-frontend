@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useHistory, useLocation } from "react-router-dom";
 import Form from "@rjsf/core";
-import { Spinner } from "react-bootstrap";
 import './../AppManagement.css';
 import Schemas from './../FormSchema'
 import baseRequest from '../../../repository/api/API';
+import LoadingWidget from '../../uielem/LoadingWidget';
 
 function AppEdit() {
     const location = useLocation();
@@ -55,14 +55,8 @@ function AppEdit() {
                 uiSchema={Schemas.UISchema}
                 onSubmit={onSubmit}/>
             <div>{errorMessage}</div>
-            {loading ?
-                <div>
-                    <Spinner animation="grow" />
-                </div>
-                : <></>}
+            <LoadingWidget isLoading={loading}/>
         </div>
-
-
     );
 }
 export default AppEdit;
