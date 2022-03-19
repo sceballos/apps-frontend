@@ -13,11 +13,6 @@ function AppCard({ app, loggedUser, handleClick, isSelected}) {
                     {isSelected ? <Badge bg="danger">Selected</Badge>
                         : <Badge bg="info">{`Modified on ${convertDate(app.modified_on)}`}</Badge>}
                 </div>
-                <Card.Img
-                    style={{ height: '10%', width: '10%' }}
-                    variant="top"
-                    src="https://play-lh.googleusercontent.com/UrY7BAZ-XfXGpfkeWg0zCCeo-7ras4DCoRalC_WXXWTK9q5b0Iw7B0YQMsVxZaNB7DM=s180" />
-
                 <Card.Body>
                     <Card.Title>
                         {app.name}
