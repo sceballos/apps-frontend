@@ -1,13 +1,9 @@
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import NavBar from './NavBar';
 import { BrowserRouter as Router } from 'react-router-dom';
+import TestUtils from '../../util/TestUtils';
 
-const testUser = {
-    username: "layla",
-    created_on: "2022-03-16T00:25:28.097Z",
-    token: "rv5aJOVOLr72YzZEXAs8"
-};
+const testUser = TestUtils.testUser;
 
 test('Home button menu should be enabled when user is not logged in', async () => {
     render(<Router><NavBar /></Router>);

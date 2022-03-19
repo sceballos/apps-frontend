@@ -3,14 +3,10 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect'
 import AppList from './AppList';
 import { act } from 'react-dom/test-utils';
+import TestUtils from '../../util/TestUtils';
 
-const testUser = {
-    username: "layla",
-    created_on: "2022-03-16T00:25:28.097Z",
-    token: "rv5aJOVOLr72YzZEXAs8"
-};
-
-const apiResponseWaitTime = 1500;
+const testUser = TestUtils.testUser;
+const apiResponseWaitTime = TestUtils.apiResponseWaitTime;
 
 test('"Enable Delete Mode" button should be NULL if user is NOT logged', async () => {
     await act(async () => {

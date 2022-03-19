@@ -1,5 +1,5 @@
 import { Card, Badge } from 'react-bootstrap';
-import convertDate from './../../util.js';
+import convertDate from '../../util/DateUtils.js';
 
 function AppCard({ app, loggedUser, handleClick, isSelected}) {
     const maxTextLength = 100;

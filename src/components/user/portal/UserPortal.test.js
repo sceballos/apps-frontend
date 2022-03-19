@@ -2,13 +2,10 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import UserPortal from './UserPortal';
 import { act } from 'react-dom/test-utils';
+import TestUtils from '../../../util/TestUtils';
 
-const testUser = {
-    username: "layla",
-    password: "password1",
-    created_on: "2022-03-16T00:25:28.097Z",
-    token: "rv5aJOVOLr72YzZEXAs8"
-};
+const testUser = TestUtils.testUser;
+const apiResponseWaitTime = TestUtils.apiResponseWaitTime;
 
 test('Default state after first render of login button should be disabled', () => {
     render(<UserPortal />);
@@ -49,7 +46,7 @@ test('An error of incorrect credentials should be displayed on failed login', as
 
     await act(async () => {
         userEvent.click(screen.queryByText('Login'));
-        await new Promise((r) => setTimeout(r, 2500));
+        await new Promise((r) => setTimeout(r, apiResponseWaitTime));
     });
 
     const errorMessage = await screen.findByText('Username or password is incorrect.');

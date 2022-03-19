@@ -2,14 +2,10 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 import { act } from 'react-dom/test-utils';
+import TestUtils from './util/TestUtils';
 
-
-const testUser = {
-  username: "layla",
-  password: "password1",
-  created_on: "2022-03-16T00:25:28.097Z",
-  token: "rv5aJOVOLr72YzZEXAs8"
-};
+const testUser = TestUtils.testUser;
+const apiResponseWaitTime = TestUtils.apiResponseWaitTime;
 
 test('Initial state has main navbar with app name', () => {
   render(<App />);
@@ -17,11 +13,10 @@ test('Initial state has main navbar with app name', () => {
   expect(mainBarTitle).not.toBeNull();
 });
 
-
 test('"Enable Delete Mode" button is not available by default', async () => {
   await act(async () => {
     render(<App />);
-    await new Promise((r) => setTimeout(r, 3000));
+    await new Promise((r) => setTimeout(r, apiResponseWaitTime));
   });
 
   const deleteModeButton = screen.queryByText('Enable Delete Mode');
@@ -39,7 +34,7 @@ test('Login flow and check if "Enable Delete Mode" exists', async () => {
 
   await act(async () => {
     userEvent.click(await screen.findByTestId("portal-submit"));
-    await new Promise((r) => setTimeout(r, 3000));
+    await new Promise((r) => setTimeout(r, apiResponseWaitTime));
   });
 
   const deleteModeButton = await screen.findByText('Enable Delete Mode');
@@ -58,7 +53,7 @@ test('Login flow and check if "Add App" exists', async () => {
 
   await act(async () => {
     userEvent.click(await screen.findByTestId("portal-submit"));
-    await new Promise((r) => setTimeout(r, 3000));
+    await new Promise((r) => setTimeout(r, apiResponseWaitTime));
   });
 
   const addAppButton = await screen.findByText('Add App');
@@ -76,7 +71,7 @@ test('Login flow and check if "Logout" exists', async () => {
 
   await act(async () => {
     userEvent.click(await screen.findByTestId("portal-submit"));
-    await new Promise((r) => setTimeout(r, 3000));
+    await new Promise((r) => setTimeout(r, apiResponseWaitTime));
   });
 
   const logoutButton = await screen.findByText('Logout');
