@@ -22,6 +22,8 @@ const serverInfo = {
 ```
 Make sure the host and port matches your [Apps Backend](https://github.com/sceballos/apps-backend) target server. If your setup for the bakend was the default one, didn't change `DB_PORT` and you are running it locally you can leave `const serverInfo` as it is.
 
+3 - run `npm install` to install all dependencies.
+
 ## Available Scripts
 
 In the project directory, you can run:
