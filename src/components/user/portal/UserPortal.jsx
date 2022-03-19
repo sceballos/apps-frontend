@@ -25,8 +25,8 @@ export default function UserPortal({ onUserLogged, onUserCreated }) {
             "/user/create",
             "POST",
             { username: username, password: password });
-            setLoading(false);
-            return apiResponse;
+        setLoading(false);
+        return apiResponse;
     }
 
     function validateForm() {
@@ -38,15 +38,19 @@ export default function UserPortal({ onUserLogged, onUserCreated }) {
         setErrorMessage("");
         setLoading(true);
         (signUpMode ? attemptUserCreation() : attemptLogin())
-        .then(response => {
-            setLoading(false);
-            if (response.message != undefined) {
-                setErrorMessage(response.message)
-            } else {
-                (signUpMode ? onUserCreated(response) : onUserLogged(response));                
+            .then(response => {
+                setLoading(false);
+                if (response.error) {
+                    setErrorMessage(response.error);
+                    return;
+                }
+                if (response.message) {
+                    setErrorMessage(response.message);
+                    return;
+                }
+                (signUpMode ? onUserCreated(response) : onUserLogged(response));
                 history.push("/");
-            }
-        });
+            });
     }
 
     return (

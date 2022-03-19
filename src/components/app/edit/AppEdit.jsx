@@ -7,17 +7,18 @@ import Schemas from './../FormSchema'
 import baseRequest from '../../../repository/api/API';
 
 function AppEdit() {
-    const [loading, setLoading] = useState(false);
     const location = useLocation();
     const history = useHistory();
-    const appToEdit = location.state.app;
-    const loggedUser = location.state.user;
-
+    const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const appId = location.state.app.app_id;
+    const [appName, setAppName] = useState(location.state.app.name);
+    const [appDescription, setAppDescription] = useState(location.state.app.description);
+    const user = location.state.user;
 
-    const updateAppRequest = async (name, description, token) => {
+    const updateAppRequest = async (id, name, description, token) => {
         const apiResponse = await baseRequest(
-            `/apps/update/${appToEdit.app_id}`,
+            `/apps/update/${id}`,
             "POST",
             { name: name, description: description },
             token);
@@ -25,14 +26,25 @@ function AppEdit() {
     }
 
     const schema = JSON.parse(JSON.stringify(Schemas.FormSchema));
-    schema.title = `Edit ${appToEdit.name}`;
-    schema.properties.name.default = appToEdit.name;
-    schema.properties.description.default = appToEdit.description;
+    schema.title = `Edit ${location.state.app.name}`;
+    schema.properties.name.default = appName;
+    schema.properties.description.default = appDescription;
     
     const onSubmit = ({ formData }, e) => {
         setLoading(true);
-        updateAppRequest(formData.name, formData.description, loggedUser.token).then(result => {
-            if (result.message !== undefined) { setErrorMessage(result.message); } else { history.push("/"); }
+        setAppName(formData.name);
+        setAppDescription(formData.description);
+        updateAppRequest(appId, formData.name, formData.description, user.token).then(result => {
+            setLoading(false);
+            if (result.error) {
+                setErrorMessage(result.error);
+                return;
+            }
+            if (result.message) {
+                setErrorMessage(result.message);
+                return;
+            }
+            history.push("/");
         });
     }
 

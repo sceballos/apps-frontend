@@ -8,6 +8,7 @@ function AppList({ loggedUser }) {
     const history = useHistory();
     const [apps, setApps] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [errorMessage, setErrorMessage] = useState(true);
     const [deleteMode, setDeleteMode] = useState(false);
     const [deleteMessage, setDeleteMessage] = useState();
     const [appsToDelete, setAppsToDelete] = useState([]);
@@ -16,10 +17,20 @@ function AppList({ loggedUser }) {
     useEffect(() => {
         let isCancelled = false;
         const getApps = async () => {
-            const apiResponse = await baseRequest("/apps")
+            const apiResponse = await baseRequest("/apps");
+
+            setLoading(false);
+
+            if (apiResponse.error) {
+                setErrorMessage(apiResponse.error);
+                return;
+            }
             if (!isCancelled) {
+                if (!apiResponse.length) {
+                    setErrorMessage("No available apps");
+                    return;
+                };
                 setApps(apiResponse);
-                setLoading(false);
             }
         }
         getApps();
@@ -46,7 +57,7 @@ function AppList({ loggedUser }) {
             return;
         }
         const wasAppSelected = appsToDelete.includes(app.app_id);
-        wasAppSelected ? 
+        wasAppSelected ?
             setAppsToDelete(appsToDelete.filter((e) => (e !== app.app_id)))
             :
             setAppsToDelete(appsToDelete => [...appsToDelete, app.app_id]);
@@ -61,13 +72,18 @@ function AppList({ loggedUser }) {
     const handleDeleteAction = (appsList, token) => {
         setDeleteMessage("Deleting...");
         attemptAppDeletion(appsList, token).then(result => {
-            if (result.message === undefined) {
-                setAppsToDelete([]);
-                setDeleteMessage("Apps successfully deleted!");
-                setLoading(true);
-            } else {
-                setDeleteMessage(result.message);
+            if (result.error) {
+                setDeleteMessage(result.error);
+                return;
             }
+            if (result.message) {
+                setDeleteMessage(result.message);
+                return;
+            }
+
+            setAppsToDelete([]);
+            setDeleteMessage("Apps successfully deleted!");
+            setLoading(true);
         });
     }
 
@@ -80,7 +96,6 @@ function AppList({ loggedUser }) {
         }
         setDeleteMode(!deleteMode);
     }
-
     return (
         <div>
             {loading ?
@@ -88,7 +103,7 @@ function AppList({ loggedUser }) {
                     <Spinner animation="grow" />
                 </div>
                 : <></>}
-
+            {errorMessage ? errorMessage : ""}
             {loggedUser && !loading ? <Button onClick={() => toggleDeleteMode()}
                 variant={deleteMode ? 'primary' : 'danger'}
                 style={{ margin: "1%", }}>

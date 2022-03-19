@@ -10,6 +10,8 @@ function AppCreate({ loggedUser }) {
     const [loading, setLoading] = useState(false);
     const history = useHistory();
     const [errorMessage, setErrorMessage] = useState("");
+    const [appName, setAppName] = useState("");
+    const [appDescription, setAppDescription] = useState("");
 
     const createAppRequest = async (name, description, token) => {
         const apiResponse = await baseRequest(
@@ -18,17 +20,30 @@ function AppCreate({ loggedUser }) {
             { name: name, description: description },
             token
         )
-        return apiResponse; 
+        return apiResponse;
     }
 
     const schema = JSON.parse(JSON.stringify(Schemas.FormSchema));
     schema.title = "Create a new application";
+    schema.properties.name.default = appName;
+    schema.properties.description.default = appDescription;
 
     const onSubmit = ({ formData }, e) => {
         setErrorMessage("");
         setLoading(true);
+        setAppName(formData.name);
+        setAppDescription(formData.description);
         createAppRequest(formData.name, formData.description, loggedUser.token).then(result => {
-            if (result.message !== undefined) { setErrorMessage(result.message); } else { history.push("/"); }
+            setLoading(false);
+            if (result.error) {
+                setErrorMessage(result.error);
+                return;
+            }
+            if (result.message) {
+                setErrorMessage(result.message);
+                return;
+            }
+            history.push("/");
         });
     }
 
